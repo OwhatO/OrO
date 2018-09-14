@@ -30,6 +30,27 @@ export default class Route
 		this[PAGE]= page;
 	}
 	
+	/**
+	 * Chack if the path matches to this route.
+	 * 
+	 * @param String path
+	 * 
+	 * @return Boolean
+	 */
+	match( path, )
+	{
+		const matches= this[REG_PATTERN].exec( path, );
+		
+		if(!( matches ))
+			return false;
+		
+		const params= {};
+		
+		this[ATTRIBUTES].forEach( attr=> params[attr.name]= conversionType( matches.groups[attr.name]||null, attr.type, ), );
+		
+		return params;
+	}
+	
 	get name()
 	{
 		return this[NAME];
@@ -66,4 +87,12 @@ function parsePattern( pattern, )
 	);
 	
 	return [ regPattern, attributes, ];
+}
+
+function conversionType( value, type, )
+{
+	if( type === 'Int' || type === 'Num' )
+		return +value;
+	else
+		return `${value}`;
 }
