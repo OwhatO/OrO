@@ -83,6 +83,11 @@ export default class Router
 		this[WINDOW]= window;
 	}
 	
+	reload()
+	{
+		this[DISPATCH]( this[WINDOW].location.pathname, this[WINDOW].location.search, this[WINDOW].location.hash, );
+	}
+	
 	get current()
 	{
 		return this[CURRENT];
