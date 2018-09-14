@@ -7,6 +7,7 @@ const PAGE_DIR= Symbol( 'PAGE_DIR', );
 const ROUTES= Symbol( 'ROUTES', );
 const VIEW= Symbol( 'VIEW', );
 const DISPATCH= Symbol( 'DISPATCH', );
+const RENDER= Symbol( 'RENDER', );
 
 export default class Router
 {
@@ -92,5 +93,20 @@ export default class Router
 			
 			return route404;
 		}
+	}
+	
+	async [RENDER]( route, params, query, anchor, )
+	{
+		const pageName= route.page;
+		
+		// Render the PAGE and update the VIEW (async)
+		const page= await import(resolve( this[PAGE_DIR], pageName.replace( /^\//, '', )+'.js'))
+		
+		if(!( page.render && page.render instanceof Function ))
+			throw new Error( 'A page must export function render()', );
+		
+		this[VIEW].update(
+			page.render( { params, query, anchor, }, ),
+		);
 	}
 }
