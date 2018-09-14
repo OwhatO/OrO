@@ -6,6 +6,7 @@ const BASE_PATH= Symbol( 'BASE_PATH', );
 const PAGE_DIR= Symbol( 'PAGE_DIR', );
 const ROUTES= Symbol( 'ROUTES', );
 const VIEW= Symbol( 'VIEW', );
+const WINDOW= Symbol( 'WINDOW', );
 const DISPATCH= Symbol( 'DISPATCH', );
 const CURRENT= Symbol( 'CURRENT', );
 const RENDER= Symbol( 'RENDER', );
@@ -66,6 +67,20 @@ export default class Router
 	showIn( container, )
 	{
 		this[VIEW]= new View( container, );
+	}
+	
+	/**
+	 * Listen to the BOM window.
+	 * 
+	 * @param Window window
+	 * 
+	 * @return void
+	 */
+	listen( window, )
+	{
+		const route= this[DISPATCH]( window.location.pathname, window.location.search, window.location.hash, );
+		
+		this[WINDOW]= window;
 	}
 	
 	get current()
