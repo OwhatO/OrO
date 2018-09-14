@@ -7,6 +7,7 @@ const PAGE_DIR= Symbol( 'PAGE_DIR', );
 const ROUTES= Symbol( 'ROUTES', );
 const VIEW= Symbol( 'VIEW', );
 const DISPATCH= Symbol( 'DISPATCH', );
+const CURRENT= Symbol( 'CURRENT', );
 const RENDER= Symbol( 'RENDER', );
 
 export default class Router
@@ -67,6 +68,11 @@ export default class Router
 		this[VIEW]= new View( container, );
 	}
 	
+	get current()
+	{
+		return this[CURRENT];
+	}
+	
 	/**
 	 * Dispatch with url.
 	 * 
@@ -80,6 +86,10 @@ export default class Router
 			
 			if( matches )
 			{
+				this[CURRENT]= route;
+				
+				this[RENDER]( route, matches, query, anchor, );
+				
 				return route;
 			}
 		}
@@ -90,6 +100,10 @@ export default class Router
 				'404',
 				()=> new Route( '404', 'Not Found', '', resolve( dirname( current(), ), './404.page', ), ),
 			);
+			
+			this[CURRENT]= route404;
+			
+			this[RENDER]( route404, {}, query, anchor, );
 			
 			return route404;
 		}
