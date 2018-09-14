@@ -6,6 +6,7 @@ const BASE_PATH= Symbol( 'BASE_PATH', );
 const PAGE_DIR= Symbol( 'PAGE_DIR', );
 const ROUTES= Symbol( 'ROUTES', );
 const VIEW= Symbol( 'VIEW', );
+const DISPATCH= Symbol( 'DISPATCH', );
 
 export default class Router
 {
@@ -63,5 +64,25 @@ export default class Router
 	showIn( container, )
 	{
 		this[VIEW]= new View( container, );
+	}
+	
+	/**
+	 * Dispatch with url.
+	 * 
+	 * @private
+	 */
+	[DISPATCH]( path, query, anchor, )
+	{
+		for( let [ name, route, ] of this[ROUTES] )
+		{
+			let matches= route.match( path, );
+			
+			if( matches )
+			{
+				return route;
+			}
+		}
+		
+		// 404
 	}
 }
