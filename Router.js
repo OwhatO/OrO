@@ -1,3 +1,4 @@
+import Route from './Route.js';
 import View from 'https://oxo.fenzland.com/OvO/0.1/View.js';
 import { resolve, traceBack, dirname, } from 'https://oxo.fenzland.com/OsO/0.1/path.js';
 
@@ -15,6 +16,41 @@ export default class Router
 		this[BASE_PATH]= new URL( resolve( baseOn, basePath, ), ).pathname.replace( /\/$/, '', );
 		this[PAGE_DIR]= resolve( baseOn, pageDIr, );
 		this[ROUTES]= new Map;
+	}
+	
+	/**
+	 * Set a DOM as route container. and create a VIEW.
+	 * 
+	 * @param String params.[name]
+	 * @param String params.*.path
+	 * @param String params.*.page
+	 * @param String params.*.title
+	 * @param Object params.*.follow
+	 * 
+	 * @param String options.*.preName
+	 * @param String options.*.prePath
+	 * @param String options.*.prePage
+	 * 
+	 * @return void
+	 */
+	route( params, { preName='', prePath=this[BASE_PATH], prePage='', }={}, )
+	{
+		for( let name in params )
+		{
+			const param= params[name];
+			let { path, page=name, title=name, follow, }= typeof param ==='string'? { path:param, } : param;
+			
+			if( preName ) name= `${preName}.${name}`;
+			if( prePath ) path= `${prePath}${path}`;
+			if( prePage ) page= resolve( prePage, page, );
+			
+			const route= new Route( name, title, path, page, );
+			
+			this[ROUTES].set( name, route, );
+			
+			if( follow )
+				this.route( follow, { preName:name, prePath:path, prePage:page, }, );
+		}
 	}
 	
 	/**
