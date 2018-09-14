@@ -1,6 +1,6 @@
 import Route from './Route.js';
 import View from 'https://oxo.fenzland.com/OvO/0.1/View.js';
-import { resolve, traceBack, dirname, } from 'https://oxo.fenzland.com/OsO/0.1/path.js';
+import { resolve, traceBack, dirname, current, } from 'https://oxo.fenzland.com/OsO/0.1/path.js';
 
 const BASE_PATH= Symbol( 'BASE_PATH', );
 const PAGE_DIR= Symbol( 'PAGE_DIR', );
@@ -84,5 +84,13 @@ export default class Router
 		}
 		
 		// 404
+		{
+			const route404= this[ROUTES].achieve(
+				'404',
+				()=> new Route( '404', 'Not Found', '', resolve( dirname( current(), ), './404.page', ), ),
+			);
+			
+			return route404;
+		}
 	}
 }
