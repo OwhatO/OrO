@@ -1,9 +1,11 @@
 import Route from './Route.js';
+import History from './History.js';
 import View from 'https://oxo.fenzland.com/OvO/0.1/View.js';
 import { resolve, traceBack, dirname, current, } from 'https://oxo.fenzland.com/OsO/0.1/path.js';
 
 const BASE_PATH= Symbol( 'BASE_PATH', );
 const PAGE_DIR= Symbol( 'PAGE_DIR', );
+const HISTORY= Symbol( 'HISTORY', );
 const ROUTES= Symbol( 'ROUTES', );
 const VIEW= Symbol( 'VIEW', );
 const WINDOW= Symbol( 'WINDOW', );
@@ -81,6 +83,12 @@ export default class Router
 		const route= this[DISPATCH]( window.location.pathname, window.location.search, window.location.hash, );
 		
 		this[WINDOW]= window;
+		this[HISTORY]= new History( window, route.name, );
+		
+		window.addEventListener( 'popstate', e=>{
+			this[HISTORY].moveTo( e.state, );
+			this[DISPATCH]( window.location.pathname, window.location.search, window.location.hash, );
+		}, );
 	}
 	
 	/**
@@ -118,6 +126,11 @@ export default class Router
 	reload()
 	{
 		this[DISPATCH]( this[WINDOW].location.pathname, this[WINDOW].location.search, this[WINDOW].location.hash, );
+	}
+	
+	get history()
+	{
+		return this[HISTORY];
 	}
 	
 	get current()
