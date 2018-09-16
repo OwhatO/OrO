@@ -123,6 +123,25 @@ export default class Router
 			return name;
 	}
 	
+	/**
+	 * Goto another page.
+	 * 
+	 * @param Link link
+	 * 
+	 * @return void
+	 */
+	goto( link, )
+	{
+		const route= this[DISPATCH]( link.path, '', '', );
+		
+		if(!( route )) return false;
+		
+		
+		this[HISTORY].push( route.name, link.url, );
+		
+		return true;
+	}
+	
 	reload()
 	{
 		this[DISPATCH]( this[WINDOW].location.pathname, this[WINDOW].location.search, this[WINDOW].location.hash, );
