@@ -83,6 +83,38 @@ export default class Router
 		this[WINDOW]= window;
 	}
 	
+	/**
+	 * Build a link to route.
+	 * 
+	 * @param String routeName
+	 * @param Object params
+	 * 
+	 * @return Link
+	 */
+	linkTo( routeName, params, )
+	{
+		if( routeName.startsWith( '.', ) )
+			routeName= this.resolve( this[CURRENT].name, routeName, );
+		
+		const route= this[ROUTES].get( routeName, )
+		
+		if(!( route ))
+			throw `Route ${routeName} is not defiend.`;
+		
+		return route.buildLink( this, params, );
+	}
+	
+	resolve( base, name, )
+	{
+		if( name.startsWith( '..', ) )
+			return this.resolve( base.replace( /(?:^|\.)\w+$/, '', ), name.replace( /^\./, '', ), );
+		else
+		if( name.startsWith( '.', ) )
+			return `${base}${name}`;
+		else
+			return name;
+	}
+	
 	reload()
 	{
 		this[DISPATCH]( this[WINDOW].location.pathname, this[WINDOW].location.search, this[WINDOW].location.hash, );
