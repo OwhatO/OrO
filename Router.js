@@ -31,7 +31,7 @@ export default class Router
 	 * @param String params.*.path
 	 * @param String params.*.page
 	 * @param String params.*.title
-	 * @param Object params.*.follow
+	 * @param Object params.*.follows
 	 * 
 	 * @param String options.*.preName
 	 * @param String options.*.prePath
@@ -44,7 +44,7 @@ export default class Router
 		for( let name in params )
 		{
 			const param= params[name];
-			let { path, page=name, title=name, follow, }= typeof param ==='string'? { path:param, } : param;
+			let { path, page=name, title=name, follows, }= typeof param ==='string'? { path:param, } : param;
 			
 			if( preName ) name= `${preName}.${name}`;
 			if( prePath ) path= uniformPath( `${prePath.replace( /\/$/, '', )}${path}`, );
@@ -54,8 +54,8 @@ export default class Router
 			
 			this[ROUTES].set( name, route, );
 			
-			if( follow )
-				this.route( follow, { preName:name, prePath:path, prePage:page, }, );
+			if( follows )
+				this.route( follows, { preName:name, prePath:path, prePage:page, }, );
 		}
 	}
 	
