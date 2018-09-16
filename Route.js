@@ -1,3 +1,4 @@
+import Link from './Link.js';
 
 const NAME= Symbol( 'NAME', );
 const TITLE= Symbol( 'TITLE', );
@@ -49,6 +50,24 @@ export default class Route
 		this[ATTRIBUTES].forEach( attr=> params[attr.name]= conversionType( matches.groups[attr.name]||null, attr.type, ), );
 		
 		return params;
+	}
+	
+	buildPath( param, )
+	{
+		return this[PATTERN].replace( /\{(\w+)(?:\:(\w+))?\}/g, ( replaced, name, )=> param[name]||'', );
+	}
+	
+	/**
+	 * Build a link.
+	 * 
+	 * @param Router router
+	 * @param Object params
+	 * 
+	 * @return Link
+	 */
+	buildLink( router, params, )
+	{
+		return new Link( router, this, this.makePath( params, ), );
 	}
 	
 	get name()
