@@ -19,7 +19,7 @@ export default class Router
 	{
 		const baseOn= dirname( traceBack(), );
 		
-		this[BASE_PATH]= new URL( resolve( baseOn, basePath, ), ).pathname.replace( /\/$/, '', );
+		this[BASE_PATH]= uniformPath( new URL( basePath, baseOn, ).pathname, );
 		this[PAGE_DIR]= resolve( baseOn, pageDIr, );
 		this[ROUTES]= new Map;
 	}
@@ -47,7 +47,7 @@ export default class Router
 			let { path, page=name, title=name, follow, }= typeof param ==='string'? { path:param, } : param;
 			
 			if( preName ) name= `${preName}.${name}`;
-			if( prePath ) path= `${prePath}${path}`;
+			if( prePath ) path= uniformPath( `${prePath.replace( /\/$/, '', )}${path}`, );
 			if( prePage ) page= resolve( prePage, page, );
 			
 			const route= new Route( name, title, path, page, );
@@ -164,6 +164,8 @@ export default class Router
 	 */
 	[DISPATCH]( path, query, anchor, )
 	{
+		path= uniformPath( path, );
+		
 		for( let [ name, route, ] of this[ROUTES] )
 		{
 			let matches= route.match( path, );
@@ -207,4 +209,9 @@ export default class Router
 			page.render( { params, query, anchor, }, ),
 		);
 	}
+}
+
+function uniformPath( path, )
+{
+	return path.replace( /(?:^(\/)|\/$)/g, '$1', );
 }
