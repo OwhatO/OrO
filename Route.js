@@ -6,6 +6,7 @@ const PATTERN= Symbol( 'PATTERN', );
 const REG_PATTERN= Symbol( 'REG_PATTERN', );
 const ATTRIBUTES= Symbol( 'ATTRIBUTES', );
 const PAGE= Symbol( 'PAGE', );
+const GATES= Symbol( 'GATES', );
 
 const typesReg= {
 	Int: '\\d+',
@@ -29,6 +30,7 @@ export default class Route
 		this[PATTERN]= pattern;
 		[ this[REG_PATTERN], this[ATTRIBUTES], ]= parsePattern( pattern, );
 		this[PAGE]= page;
+		this[GATES]= [];
 	}
 	
 	/**
@@ -70,6 +72,13 @@ export default class Route
 		return new Link( router, this.buildPath( params, ), );
 	}
 	
+	gatedBy( ...gates )
+	{
+		this[GATES].push( ...gates, );
+		
+		return this;
+	}
+	
 	get name()
 	{
 		return this[NAME];
@@ -83,6 +92,11 @@ export default class Route
 	get page()
 	{
 		return this[PAGE];
+	}
+	
+	get gates()
+	{
+		return this[GATES];
 	}
 }
 
