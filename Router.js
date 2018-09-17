@@ -31,31 +31,36 @@ export default class Router
 	 * @param String params.*.path
 	 * @param String params.*.page
 	 * @param String params.*.title
+	 * @param Array  params.*.gates
 	 * @param Object params.*.follows
 	 * 
 	 * @param String options.*.preName
 	 * @param String options.*.prePath
 	 * @param String options.*.prePage
+	 * @param Array  options.*.preGates
 	 * 
 	 * @return void
 	 */
-	route( params, { preName='', prePath=this[BASE_PATH], prePage='', }={}, )
+	route( params, { preName='', prePath=this[BASE_PATH], prePage='', preGates=[], }={}, )
 	{
 		for( let name in params )
 		{
 			const param= params[name];
-			let { path, page=name, title=name, follows, }= typeof param ==='string'? { path:param, } : param;
+			let { path, page=name, title=name, gates=[], follows, }= typeof param ==='string'? { path:param, } : param;
 			
 			if( preName ) name= `${preName}.${name}`;
 			if( prePath ) path= uniformPath( `${prePath.replace( /\/$/, '', )}${path}`, );
 			if( prePage ) page= resolve( prePage, page, );
+			if( preGates ) gates.push( ...preGates, );
 			
 			const route= new Route( name, title, path, page, );
+			
+			route.gatedBy( ...gates, );
 			
 			this[ROUTES].set( name, route, );
 			
 			if( follows )
-				this.route( follows, { preName:name, prePath:path, prePage:page, }, );
+				this.route( follows, { preName:name, prePath:path, prePage:page, preGates:gates, }, );
 		}
 	}
 	
