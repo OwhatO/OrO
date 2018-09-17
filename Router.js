@@ -202,7 +202,9 @@ export default class Router
 	
 	async [RENDER]( route, params, query, anchor, )
 	{
-		const pageName= route.page;
+		const gates= await Promise.all( route.gates.map( gate=> typeof gate==='string'? import(`${gate}.js`) : gate, ), )
+		const blocker= gates.reduce( ( blocker, gate, )=> blocker || (gate.validate()? null : gate), null, )
+		const pageName= (blocker||route).page;
 		
 		// Render the PAGE and update the VIEW (async)
 		const page= await import(resolve( this[PAGE_DIR], pageName.replace( /^\//, '', )+'.js'))
