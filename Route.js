@@ -67,7 +67,7 @@ export default class Route
 	 */
 	buildLink( router, params, )
 	{
-		return new Link( router, this, this.buildPath( params, ), );
+		return new Link( router, this.buildPath( params, ), );
 	}
 	
 	get name()
