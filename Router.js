@@ -206,7 +206,7 @@ export default class Router
 			throw new Error( 'A page must export function render()', );
 		
 		this[VIEW].update(
-			page.render( { params, query, anchor, }, ),
+			page.render( { router: this, params, query, anchor, }, ),
 		);
 	}
 }
